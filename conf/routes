@@ -3,7 +3,17 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index()
+GET     /                           @controllers.Application.index()
+
+POST    /user/new                   @controllers.UserController.createUser()
+
+POST    /user/update                   @controllers.UserController.updateUser()
+
+POST    /user/update-status         @controllers.UserController.updateStatus()
+
+POST    /user/upload                @controllers.UserController.uploadMedia()
+
+GET     /user/list                  @controllers.UserController.list()
 
 GET     /user/:name                 @controllers.UserController.login(name: String)
 

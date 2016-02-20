@@ -1,11 +1,18 @@
 package com.inmobi.user.dto;
 
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(value = "user", noClassnameStored = true)
 public class User {
 
+    @Id
+    private ObjectId _id;
     private int id;
     private String name;
     private boolean isInterestedInFootball;
@@ -13,6 +20,23 @@ public class User {
     private boolean isInterestedInPool;
     private boolean isInterestedInBadminton;
     private boolean isInterestedInSquash;
+    private List<Feed> feeds = new ArrayList<>();
+
+    public ObjectId get_id() {
+        return _id;
+    }
+
+    public void set_id(ObjectId _id) {
+        this._id = _id;
+    }
+
+    public List<Feed> getFeeds() {
+        return feeds;
+    }
+
+    public void setFeeds(List<Feed> feeds) {
+        this.feeds = feeds;
+    }
 
     public int getId() {
         return id;
