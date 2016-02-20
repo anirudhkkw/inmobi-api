@@ -10,6 +10,7 @@ public class Feed {
     private ObjectId _id;
     private String title;
     private String url;
+    private String link;
     private String mimeType;
     private Tags tag;
     private ObjectId userId;
@@ -26,6 +27,14 @@ public class Feed {
         this.tag = tag;
         this.userId = userId;
         this.eventId = eventId;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public void setLink(String link) {
+        this.link = link;
     }
 
     public String getUrl() {

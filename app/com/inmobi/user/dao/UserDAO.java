@@ -61,4 +61,18 @@ public class UserDAO extends BasicDAO<User, Object> {
         return feeds;
     }
 
+    public List<String> getTags(String userId){
+        List<String> tags = new ArrayList<>();
+        User user = get(new ObjectId(userId));
+        if(user.isInterestedInBadminton())
+            tags.add("Badminton");
+        if(user.isInterestedInFootball())
+            tags.add("Football");
+        if(user.isInterestedInGym())
+            tags.add("Gym");
+        if(user.isInterestedInSquash())
+            tags.add("Squash");
+        return tags;
+    }
+
 }
