@@ -75,6 +75,8 @@ public class EventDAO extends BasicDAO<Event, Object> {
         Event event = getDs().createQuery(Event.class).filter("_id", new ObjectId(eventId)).get();
         if(event.getTeams().stream().filter(o -> o.get_id().equals(teamId)).findFirst().isPresent()){
             event.getTeams().stream().filter(o -> o.get_id().equals(teamId)).findFirst().get().getUserIds().add(userId);
+            int cur = event.getPeople().getCurrent();
+            event.getPeople().setCurrent(++cur);
             datastore.save(event);
         }
         User user = new UserDAO().get(new ObjectId(userId));
