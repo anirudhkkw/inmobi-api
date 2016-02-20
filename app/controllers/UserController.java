@@ -127,4 +127,11 @@ public class UserController extends Controller {
             return ok(Json.toJson(response));
         }
     }
+
+    public Result getLeaderboard(String tag){
+        Response response = new Response();
+        response.setData(new UserDAO().getLeaderboard(Tags.valueOf(tag.toUpperCase())));
+        response.setSuccess(true);
+        return ok(Json.toJson(response));
+    }
 }

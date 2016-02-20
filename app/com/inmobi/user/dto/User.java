@@ -5,6 +5,9 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity(value = "user", noClassnameStored = true)
 public class User {
 
@@ -17,6 +20,15 @@ public class User {
     private boolean isInterestedInBadminton;
     private boolean isInterestedInSquash;
     private Location location;
+    private List<Gamify> gamify = new ArrayList<>();
+
+    public List<Gamify> getGamify() {
+        return gamify;
+    }
+
+    public void setGamify(List<Gamify> gamify) {
+        this.gamify = gamify;
+    }
 
     public String get_id() {
         return _id.toString();

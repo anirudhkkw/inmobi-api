@@ -24,7 +24,7 @@ public class FeedDAO extends BasicDAO<Feed, Object> {
         return getDs().createQuery(Feed.class).filter("userId", userId).asList();
     }
 
-    public List<Feed> listByEvent(ObjectId eventId){
-        return getDs().createQuery(Feed.class).filter("eventId", eventId).asList();
+    public List<Feed> listByEvent(ObjectId eventId, ObjectId userId){
+        return getDs().createQuery(Feed.class).filter("eventId", eventId).field("userId").notEqual(userId).asList();
     }
 }

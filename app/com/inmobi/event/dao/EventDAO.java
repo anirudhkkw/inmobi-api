@@ -7,6 +7,9 @@ import com.inmobi.event.dto.Event;
 import com.inmobi.event.dto.EventJson;
 import com.inmobi.event.dto.Team;
 import com.inmobi.feed.dao.FeedDAO;
+import com.inmobi.user.dao.UserDAO;
+import com.inmobi.user.dto.Gamify;
+import com.inmobi.user.dto.User;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.DatastoreImpl;
 import org.mongodb.morphia.dao.BasicDAO;
@@ -37,7 +40,7 @@ public class EventDAO extends BasicDAO<Event, Object> {
     public EventJson get(ObjectId eventId){
         EventJson eventJson = new EventJson();
         eventJson.setEvent(getDs().createQuery(Event.class).filter("_id", eventId).get());
-        eventJson.setFeeds(new FeedDAO().listByEvent(eventId));
+        //eventJson.setFeeds(new FeedDAO().listByEvent(eventId));
         return eventJson;
     }
 
@@ -74,6 +77,17 @@ public class EventDAO extends BasicDAO<Event, Object> {
             event.getTeams().stream().filter(o -> o.get_id().equals(teamId)).findFirst().get().getUserIds().add(userId);
             datastore.save(event);
         }
+        User user = new UserDAO().get(new ObjectId(userId));
+        if(user.getGamify().stream().filter(o -> o.getTag().equals(event.getTag())).findFirst().isPresent()){
+            int points = user.getGamify().stream().filter(o -> o.getTag().equals(event.getTag())).findFirst().get().getPoints() + 10;
+            user.getGamify().stream().filter(o -> o.getTag().equals(event.getTag())).findFirst().get().setPoints(points);
+        } else {
+            Gamify gamify = new Gamify();
+            gamify.setTag(event.getTag());
+            gamify.setPoints(10);
+            user.getGamify().add(gamify);
+        }
+        new UserDAO().save(user);
         return true;
     }
 

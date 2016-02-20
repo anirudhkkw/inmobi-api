@@ -3,6 +3,7 @@ package com.inmobi.user.dao;
 import com.inmobi.event.dao.EventDAO;
 import com.inmobi.feed.dao.FeedDAO;
 import com.inmobi.feed.dto.Feed;
+import com.inmobi.feed.dto.Tags;
 import com.inmobi.user.dto.User;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.DatastoreImpl;
@@ -55,9 +56,10 @@ public class UserDAO extends BasicDAO<User, Object> {
         List<ObjectId> eventIds = new EventDAO().getUserEvents(userId);
         List<Feed> feeds = new ArrayList<>();
         for(ObjectId objectId : eventIds){
-            feeds.addAll(new FeedDAO().listByEvent(objectId));
+            feeds.addAll(new FeedDAO().listByEvent(objectId, userId));
         }
         feeds.addAll(new FeedDAO().list(userId));
+
         return feeds;
     }
 
@@ -73,6 +75,10 @@ public class UserDAO extends BasicDAO<User, Object> {
         if(user.isInterestedInSquash())
             tags.add("Squash");
         return tags;
+    }
+
+    public List<User> getLeaderboard(Tags tags){
+        return getDs().createQuery(User.class).filter("gamify.tag", tags).order("gamify.points").asList();
     }
 
 }

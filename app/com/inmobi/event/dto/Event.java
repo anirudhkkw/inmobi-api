@@ -1,5 +1,6 @@
 package com.inmobi.event.dto;
 
+import com.inmobi.feed.dto.Tags;
 import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
@@ -17,6 +18,15 @@ public class Event {
     private Location location;
     private People people;
     private List<Team> teams;
+    private Tags tag;
+
+    public Tags getTag() {
+        return tag;
+    }
+
+    public void setTag(Tags tag) {
+        this.tag = tag;
+    }
 
     public String get_id() {
         return _id.toString();

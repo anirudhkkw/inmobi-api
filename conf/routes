@@ -23,6 +23,8 @@ GET     /event/list                 @controllers.EventController.list(latitude: 
 
 GET     /event/:eventId             @controllers.EventController.get(eventId: String)
 
+GET     /user/leader/:tag           @controllers.UserController.getLeaderboard(tag: String)
+
 GET     /user/feed/:userId          @controllers.UserController.feed(userId: String)
 
 GET     /user/:name                 @controllers.UserController.login(name: String, latitude: String, longitude: String)
