@@ -109,6 +109,7 @@ public class UserController extends Controller {
                     feed.setUrl(result.get(tags.get(tagIndex)).get(counter).get("image").asText());
                     feed.setMimeType("image/jpeg");
                     feed.setTitle(result.get(tags.get(tagIndex)).get(counter).get("title").asText() + " @ " + result.get(tags.get(tagIndex)).get(counter).get("price").asText());
+                    feed.setUserId(new ObjectId(userId));
                     finalResult.add(feed);
                     counter = 0;
                     if(tagIndex == tags.size()){
