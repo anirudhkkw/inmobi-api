@@ -3,16 +3,17 @@ package controllers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.inmobi.AWS.GeneratePublicUrlAws;
 
+import com.inmobi.event.dto.Location;
 import com.inmobi.user.dao.UserDAO;
-import com.inmobi.user.dto.Feed;
+import com.inmobi.feed.dto.Feed;
 import com.inmobi.user.dto.User;
 import org.apache.commons.io.FilenameUtils;
-import play.data.Form;
-import play.db.*;
+import org.bson.types.ObjectId;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -22,9 +23,12 @@ import settings.Response;
 
 public class UserController extends Controller {
 
-    public Result login(String name){
+    public Result login(String name, String latitude, String longitude){
         Response response = new Response();
-        response.setData(new UserDAO().get(name));
+        User user = new UserDAO().get(name);
+        user.setLocation(new Location(latitude, longitude));
+        new UserDAO().save(user);
+        response.setData(user);
         response.setSuccess(true);
         return ok(Json.toJson(response));
     }
@@ -47,37 +51,6 @@ public class UserController extends Controller {
 
     }
 
-    public Result updateStatus(){
-        Response response = new Response();
-        try{
-
-            Http.MultipartFormData body = request().body().asMultipartFormData();
-            Http.MultipartFormData.FilePart media = body.getFile("media");
-            String title = body.asFormUrlEncoded().get("title")[0];
-            int userId = Integer.parseInt(body.asFormUrlEncoded().get("userId")[0]);
-            PutObjectResult putObjectResult = Global.getS3Client().putObject(new PutObjectRequest(Global.getAmazonBucket(), "media" + "/" + body.asFormUrlEncoded().get("userId")[0] + "/" +
-                    media.getFilename(), media.getFile()).withCannedAcl(CannedAccessControlList.PublicRead));
-            String publicUrl = GeneratePublicUrlAws.generateUrl(body.asFormUrlEncoded().get("userId")[0], media.getFilename(), "media");
-            String mimeType;
-            if(FilenameUtils.getExtension(media.getFilename()).equals("mp4")){
-                mimeType = "video/mp4";
-            } else {
-                mimeType = "image/jpeg";
-            }
-            UserDAO userDAO = new UserDAO();
-            if(!userDAO.updateStatus(new Feed(title,publicUrl, mimeType), userId)){
-                response.setError("User not found");
-                response.setSuccess(false);
-                return badRequest(Json.toJson(response));
-            }
-            response.setSuccess(true);
-            return ok(Json.toJson(response));
-        }catch (Exception ex){
-            response.setError(ex.getMessage());
-            return badRequest(Json.toJson(response));
-        }
-    }
-
     public Result createUser(){
         JsonNode node = request().body().asJson();
         UserDAO userDAO = new UserDAO();
@@ -93,10 +66,20 @@ public class UserController extends Controller {
         JsonNode node = request().body().asJson();
         UserDAO userDAO = new UserDAO();
         try{
-            userDAO.updateUser(new ObjectMapper().treeToValue(node, User.class));
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            userDAO.updateUser(objectMapper.treeToValue(node, User.class), new ObjectId(node.get("id").asText()));
             return ok();
         }catch (Exception ex){
             return badRequest(ex.getMessage());
         }
+    }
+
+    public Result feed(String userId){
+        Response response = new Response();
+        response.setData(new UserDAO().getFeeds(new ObjectId(userId)));
+        response.setSuccess(true);
+        return ok(Json.toJson(response));
     }
 }

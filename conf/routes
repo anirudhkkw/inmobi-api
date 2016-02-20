@@ -7,15 +7,25 @@ GET     /                           @controllers.Application.index()
 
 POST    /user/new                   @controllers.UserController.createUser()
 
-POST    /user/update                   @controllers.UserController.updateUser()
+POST    /user/update                @controllers.UserController.updateUser()
 
-POST    /user/update-status         @controllers.UserController.updateStatus()
+POST    /feed/new                   @controllers.FeedController.create()
 
 POST    /user/upload                @controllers.UserController.uploadMedia()
 
 GET     /user/list                  @controllers.UserController.list()
 
-GET     /user/:name                 @controllers.UserController.login(name: String)
+POST    /event/new                  @controllers.EventController.create()
+
+GET     /event/join                 @controllers.EventController.join(eventId: String,teamId: String,userId: String)
+
+GET     /event/list                 @controllers.EventController.list(latitude: String, longitude: String)
+
+GET     /event/:eventId             @controllers.EventController.get(eventId: String)
+
+GET     /user/feed/:userId          @controllers.UserController.feed(userId: String)
+
+GET     /user/:name                 @controllers.UserController.login(name: String, latitude: String, longitude: String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
