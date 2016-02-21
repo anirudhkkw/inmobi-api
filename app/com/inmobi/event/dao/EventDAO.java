@@ -59,6 +59,7 @@ public class EventDAO extends BasicDAO<Event, Object> {
         for(Event e : getDs().createQuery(Event.class).asList()){
             node = new ObjectMapper().createObjectNode();
             EventJson eventJson = get(new ObjectId(e.get_id()));
+            eventJson.setFeeds(new FeedDAO().listByEvent(new ObjectId(e.get_id())));
             ((ObjectNode)node).put("sourceLatitude", latitude);
             ((ObjectNode)node).put("sourceLongitude", longitude);
             ((ObjectNode)node).put("destinationLatitude", e.getLocation().getLatitude());
@@ -67,7 +68,9 @@ public class EventDAO extends BasicDAO<Event, Object> {
             eventJson.setDistance(result.get("distance").asText());
             eventJson.setTime(result.get("time").asText());
             eventJsons.add(eventJson);
+
         }
+
         return eventJsons;
     }
 
