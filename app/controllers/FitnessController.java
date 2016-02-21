@@ -20,7 +20,7 @@ public class FitnessController extends Controller{
     public Result getFitnesssData(){
 
         Response response = new Response();
-        String accessToken = "Bearer ya29.jwID9mskdLevi6ju_IzMeJwHa4CfV7m9HJ7x4eu48cbEIbZXC6OCdW2orrhwqxnuhaWM";
+        String accessToken = "Bearer ya29.jwIg9TbusLvOc5FdJRkZ13rdlBuaHQih2OX5g1CO-0eRPJ8fspq8s1Lyyia1NEtyqBdM";
 
         WSRequest request = WS.url("https://www.googleapis.com/fitness/v1/users/me/dataSources/derived:com.google.step_count.delta:com.google.android.gms:estimated_steps/datasets/0-1597515179728708316");
         request.setHeader("Authorization", accessToken);
