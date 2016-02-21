@@ -14,12 +14,22 @@ public class User {
     @Id
     private ObjectId _id;
     private String name;
+    private String profileURL;
     private boolean isInterestedInFootball;
     private boolean isInterestedInGym;
     private boolean isInterestedInPool;
     private boolean isInterestedInBadminton;
     private boolean isInterestedInSquash;
     private Location location;
+
+    public String getProfileURL() {
+        return profileURL;
+    }
+
+    public void setProfileURL(String profileURL) {
+        this.profileURL = profileURL;
+    }
+
     private List<Gamify> gamify = new ArrayList<>();
 
     public List<Gamify> getGamify() {
