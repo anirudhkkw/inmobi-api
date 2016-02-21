@@ -5,6 +5,8 @@
 # Home page
 GET     /                           @controllers.Application.index()
 
+GET     /fitness                    @controllers.FitnessController.getFitnesssData()
+
 POST    /user/new                   @controllers.UserController.createUser()
 
 POST    /user/update                @controllers.UserController.updateUser()
