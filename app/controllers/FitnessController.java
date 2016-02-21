@@ -9,6 +9,7 @@ import play.libs.ws.WS;
 import play.libs.ws.WSRequest;
 import play.mvc.Controller;
 import play.mvc.Result;
+import settings.Response;
 
 import java.net.URLEncoder;
 import java.sql.Timestamp;
@@ -17,6 +18,8 @@ import java.util.Date;
 
 public class FitnessController extends Controller{
     public Result getFitnesssData(){
+
+        Response response = new Response();
         String accessToken = "Bearer ya29.jwID9mskdLevi6ju_IzMeJwHa4CfV7m9HJ7x4eu48cbEIbZXC6OCdW2orrhwqxnuhaWM";
 
         WSRequest request = WS.url("https://www.googleapis.com/fitness/v1/users/me/dataSources/derived:com.google.step_count.delta:com.google.android.gms:estimated_steps/datasets/0-1597515179728708316");
@@ -52,7 +55,8 @@ public class FitnessController extends Controller{
 
 
         }
-
-        return ok(Json.toJson(result));
+        response.setSuccess(true);
+        response.setData(result);
+        return ok(Json.toJson(response));
     }
 }
