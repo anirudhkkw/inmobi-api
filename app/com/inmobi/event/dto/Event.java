@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(value = "event", noClassnameStored = true)
@@ -17,7 +18,7 @@ public class Event {
     private String toDate;
     private Location location;
     private People people;
-    private List<Team> teams;
+    private List<Team> teams = new ArrayList<>();
     private Tags tag;
 
     public Tags getTag() {
